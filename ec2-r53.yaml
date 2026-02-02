@@ -1,0 +1,65 @@
+- name: checking
+  hosts: localhost
+  connection: local
+  vars:
+    ami_id: ami-0220d79f3f480ecf5
+    vpc_id: vpc-0cac9c8a0424834ab
+    sg_id: sg-022651e837cb49811
+    vpc_subnet_id: subnet-0732bfc40e6d93c9e
+    domain_name: "akulaanil.fun"
+    instance_type: t3.micro
+    region: us-east-1
+    instances:
+      - mongodb
+      - redis
+      - mysql
+      - rabbitmq
+      - catalogue
+      - user
+      - cart
+      - shipping
+      - payment
+      - frontend
+
+  tasks:
+    - name: Print a message
+      ansible.builtin.debug:
+        msg: "This is a local playbook."
+
+    - name: Launch EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "{{ item }}"
+        image_id: "{{ ami_id }}"
+        instance_type: "{{ instance_type }}"
+        vpc_subnet_id: "{{ vpc_subnet_id }}"
+        security_group: "{{ sg_id }}"
+        region: "{{ region }}"
+        state: present
+        tags:
+          Name: "{{ item }}"
+      loop: "{{ instances }}"
+      register: ec2_output
+
+    - name: create route53 record
+      amazon.aws.route53:
+        state: present
+        zone: "{{ domain_name }}"
+        record: "{{ item.item }}.{{ domain_name }}"
+        type: A
+        ttl: 1
+        value: "{{ item.instances[0].private_ip_address }}"
+        overwrite: true
+      loop: "{{ ec2_output.results }}"
+
+
+    - name: create route53 record for frontend
+      amazon.aws.route53:
+        state: present
+        zone: "{{ domain_name }}"
+        record: "{{ domain_name }}" # akulaanil.fun
+        type: A
+        ttl: 1
+        value: "{{ item.instances[0].public_ip_address }}"
+        overwrite: true
+      when: item.item == "frontend"
+      loop: "{{ ec2_output.results }}"
