@@ -7,3 +7,7 @@ USER_HOST: user.akulaanil.fun
 CART_HOST: cart.akulaanil.fun
 PAYMENT_HOST: payment.akulaanil.fun
 SHIPPING_HOST: shipping.akulaanil.fun
+
+MYSQL_ROOT_USER: root
+MYSQL_ROOT_PASSWORD: RoboShop@1
+version: 1.0
