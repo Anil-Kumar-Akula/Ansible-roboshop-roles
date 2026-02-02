@@ -1,0 +1,12 @@
+RABBITMQ_USER: roboshop
+RABBITMQ_PASS: roboshop123
+
+REDIS_HOST: redis.akulaanil.fun
+MONGODB_HOST: mongodb.akulaanil.fun
+MYSQL_HOST: mysql.akulaanil.fun
+RABBITMQ_HOST: rabbitmq.akulaanil.fun
+CATALOGUE_HOST: catalogue.akulaanil.fun
+USER_HOST: user.akulaanil.fun
+CART_HOST: cart.akulaanil.fun
+PAYMENT_HOST: payment.akulaanil.fun
+SHIPPING_HOST: shipping.akulaanil.fun
